@@ -3,6 +3,8 @@ from enum import unique
 import bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import pdb
+
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -11,6 +13,7 @@ def connect_db(app):
 
     db.app = app
     db.init_app(app)
+    pdb.set_trace()
 
 class User(db.Model):
 
@@ -30,12 +33,14 @@ class User(db.Model):
 
     feedback = db.relationship("Feedback", backref="user", cascade="all,delete")
     # no idea what the cascade thing is
+    # cascading delete - users and user feedback. if yuo delete user and not their feedback you end up with a foreign key leading to non existent row
 
     # solution code says next is the start of convenience class methods - what is that?
 
     @classmethod
     def register(cls, username, password, first_name, last_name, email):
         # I'm assuming this is accessing those arguments from right above, but what is cls?
+        # probably giving the class name
         """registers a user and hashes their password"""
 
         hashed = bcrypt.generate_password_hash(password)

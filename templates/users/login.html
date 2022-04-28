@@ -10,12 +10,14 @@ User Login
 
     {{form.hidden_tag()}}
     <!-- can we go over hidden tags? they were in the videos but I don't remember what the deal with them is -->
+    <!-- idea is data that user isn't entering or seeing - an id that links to something else, something that will be included in their post but invisible -->
 
     {% for field in form.errors %}
         <div class="alert alert-danger">{{ field }}:
             <ul>
                 {% for error in form.errors[field] %}
                 <!-- to go from for field in form.errors to for error in form.errors[field] is confusing to me -->
+                <!-- for field is getting list of keys, then each key can have multiple errors. entered email could be too short for example. -->
                     <li>{{ error }}</li>
                 {% endfor %}    
             </ul>

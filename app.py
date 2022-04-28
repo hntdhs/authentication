@@ -41,6 +41,7 @@ def register():
 
         user = User.register(username, password, first_name, last_name, email)
         # what is the .register? I assume it's a method name or something like that? 
+        # right click and see the definition
 
         db.session.commit()
         session['username'] = user.username
@@ -50,6 +51,7 @@ def register():
     else:
         return render_template("users/register.html", form=form)
         # I noticed that the solution code doesn't put a / at the start of the URL when it's render template, but does when it's a redirect - is that important or no?
+        # r_t can take full path or start from root directory, with the latter it doesn't need slash, redirect is aLways the former
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -90,6 +92,8 @@ def show_user(username):
     if "username" not in session or username != session['username']:
         raise Unauthorized()
         # where is Unauthorized() coming from? i'm sure it raises an error that tells the user they're unauthorized, but what exactly is happening?
+        # see from/import
+
 
     user = User.query.get(username)
     form = DeleteForm()
@@ -108,6 +112,7 @@ def remove_user(username):
     db.session.commit()
     session.pop("username")
     # why do we do both the session.delete and session.pop? what's the difference?
+    # we're dealing with 2 sessions - db.session and session
 
     return redirect("/login")
 
@@ -130,12 +135,14 @@ def new_feedback(username):
             username=username,
         )
         # why do we need to do both the title = form.title.data and also the title=title block? also is it important that one uses space around the = sign and the other doesn't?
+        # first is getting title out of form, then we're creating feedback object, so we're passing it into constructor the 2nd time
 
         db.session.commit(feedback)
         db.session.commit()
 
         return redirect(f"/users/{feedback.username}")
         # the function is showing a form to submit feedback. at the end, if the form doesn’t validate, we render the feedback/new.html template. how is the form showing up prior to that? it’s just form = FeedbackForm() and then if form.validate_on_submit().
+        # first time we come to the route its a GET so that if form.validate will evaluate to false. so it falls down to the else and renders a blank form. the form submits to the same url but as a POST. then form validation could succeed, or if not it redisplays the form with error message.
 
     else:
         return render_template("feedback/new.html", form=form)
@@ -151,6 +158,7 @@ def update_feedback(feedback_id):
 
     form = FeedbackForm(obj=feedback)
     # don't understand the obj=feedback thing 
+    # just pSSING IN THE DB OBJ TO INITIalize for initial values
 
     if form.validate_on_submit():
         feedback.title = form.title.data
@@ -170,6 +178,7 @@ def delete_feedback(feedback_id):
     feedback = Feedback.query.get(feedback_id)
     if "username" not in session or feedback.username != session['username']:
         # I noticed this above as well, but we do feedback = Feedback...(feedback_id), then use that to pull feedback.username. Does that first line give us all the information from that iteration of the Feedback model (I forget the proper syntax for that)? I assume so, just wanted to check.
+        # 
         raise Unauthorized()
 
     form = DeleteForm()
