@@ -137,7 +137,7 @@ def new_feedback(username):
         # why do we need to do both the title = form.title.data and also the title=title block? also is it important that one uses space around the = sign and the other doesn't?
         # first is getting title out of form, then we're creating feedback object, so we're passing it into constructor the 2nd time
 
-        db.session.commit(feedback)
+        db.session.add(feedback)
         db.session.commit()
 
         return redirect(f"/users/{feedback.username}")

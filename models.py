@@ -13,7 +13,8 @@ def connect_db(app):
 
     db.app = app
     db.init_app(app)
-    pdb.set_trace()
+    # pdb.set_trace()
+    db.create_all()
 
 class User(db.Model):
 
